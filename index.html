@@ -1,0 +1,150 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <!-- Bootstrap 5 CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS for styling -->
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .weather-card {
+            background-color: #ffffff; /* White card background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .weather-icon {
+            font-size: 4rem; /* Larger icon size */
+            margin-bottom: 10px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        /* Color classes for different weather conditions */
+        .sunny {
+            color: #ffc107; /* Yellow */
+        }
+        .cloudy {
+            color: #6c757d; /* Gray */
+        }
+        .rainy {
+            color: #17a2b8; /* Teal */
+        }
+        .snowy {
+            color: #dee2e6; /* Light gray */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4 text-center">Weather Dashboard</h1>
+
+        <div class="search-container">
+            <div class="input-group">
+                <input type="text" class="form-control" id="city-input" placeholder="Enter city name">
+                <button class="btn btn-primary" type="button" id="search-button">Search</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="weather-card">
+                    <div id="weather-icon" class="weather-icon"></div>
+                    <h2 id="city-name"></h2>
+                    <p>Temperature: <span id="temperature"></span>°C</p>
+                    <p>Condition: <span id="condition"></span></p>
+                    <p>Humidity: <span id="humidity"></span>%</p>
+                    <p>Wind Speed: <span id="wind-speed"></span> m/s</p>
+                    <div id="error-message" class="text-danger"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS (optional, but good practice) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to generate random weather data
+        function getRandomWeatherData() {
+            const temperature = Math.floor(Math.random() * 40) - 10; // Temperature between -10 and 30
+            const humidity = Math.floor(Math.random() * 100);
+            const windSpeed = Math.floor(Math.random() * 20); // Wind speed up to 20 m/s
+            const conditions = ['Sunny', 'Cloudy', 'Rainy', 'Snowy'];
+            const condition = conditions[Math.floor(Math.random() * conditions.length)];
+
+            // Determine icon and color based on condition
+            let iconClass = '';
+            let colorClass = '';
+            switch (condition) {
+                case 'Sunny':
+                    iconClass = 'fas fa-sun sunny'; // Font Awesome sun icon
+                    colorClass = 'sunny';
+                    break;
+                case 'Cloudy':
+                    iconClass = 'fas fa-cloud cloudy'; // Font Awesome cloud icon
+                    colorClass = 'cloudy';
+                    break;
+                case 'Rainy':
+                    iconClass = 'fas fa-cloud-showers-heavy rainy'; // Font Awesome rain icon
+                    colorClass = 'rainy';
+                    break;
+                case 'Snowy':
+                    iconClass = 'fas fa-snowflake snowy'; // Font Awesome snow icon
+                    colorClass = 'snowy';
+                    break;
+                default:
+                    iconClass = 'fas fa-question-circle'; // Default question mark icon
+            }
+
+            return {
+                temperature,
+                humidity,
+                windSpeed,
+                condition,
+                iconClass,
+                colorClass,
+            };
+        }
+
+        // Function to update the weather display
+        function updateWeather(city) {
+            const { temperature, humidity, windSpeed, condition, iconClass, colorClass } = getRandomWeatherData();
+
+            document.getElementById('temperature').textContent = temperature;
+            document.getElementById('condition').textContent = condition;
+            document.getElementById('humidity').textContent = humidity;
+            document.getElementById('wind-speed').textContent = windSpeed;
+            document.getElementById('city-name').textContent = city;
+
+            // Update the weather icon
+            const iconElement = document.getElementById('weather-icon');
+            iconElement.innerHTML = `<i class="${iconClass}"></i>`; // Use innerHTML to set the icon
+            iconElement.className = `weather-icon ${colorClass}`; // Apply the color class
+            document.getElementById('error-message').textContent = ''; // Clear error message
+        }
+
+        // Event listener for the search button
+        document.getElementById('search-button').addEventListener('click', () => {
+            const city = document.getElementById('city-input').value.trim();
+            if (city) {
+                updateWeather(city);
+            } else {
+                document.getElementById('error-message').textContent = 'Please enter a city name.';
+            }
+        });
+
+        // Add Font Awesome to the page (CDN)
+        const fontAwesomeLink = document.createElement('link');
+        fontAwesomeLink.rel = 'stylesheet';
+        fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+        document.head.appendChild(fontAwesomeLink);
+    </script>
+</body>
+</html>
